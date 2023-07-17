@@ -1,6 +1,7 @@
 package com.facebook.view;
 
 import com.facebook.controller.LikeController;
+import com.facebook.customException.InvalidNumberFormat;
 import com.facebook.model.Like;
 import com.facebook.view.validation.LikeValidation;
 import com.facebook.view.validation.UserValidation;
@@ -61,9 +62,10 @@ public class LikeView extends CommonView {
     private Long getLikeIdGenerate() {
         return id++;
     }
+
     /**
      * <p>
-     * Gets the like id detail
+     * Gets the like id and validate
      * </p>
      *
      * @return Returns the like id of the user
@@ -76,8 +78,8 @@ public class LikeView extends CommonView {
             if (likeValidation.validateLikeId(String.valueOf(likeId))) {
                 return likeId;
             }
-        } catch (final NumberFormatException exception) {
-            System.out.println("PLEASE ENTER AN INTEGER");
+        } catch (NumberFormatException exception) {
+            throw new InvalidNumberFormat("PLEASE ENTER AN INTEGER");
         }
 
         return getLikeIdAndGenerate();
@@ -85,7 +87,7 @@ public class LikeView extends CommonView {
 
     /**
      * <p>
-     * Gets the user id detail
+     * Gets the user id and validate
      * </p>
      *
      * @return Returns the user id of the user
@@ -98,8 +100,8 @@ public class LikeView extends CommonView {
             if (userValidation.validateUserId(String.valueOf(userId))) {
                 return userId;
             }
-        } catch (final NumberFormatException exception) {
-            System.out.println("PLEASE ENTER AN INTEGER");
+        } catch (NumberFormatException exception) {
+            throw new InvalidNumberFormat("PLEASE ENTER AN INTEGER");
         }
 
         return getUserIdAndGenerate();

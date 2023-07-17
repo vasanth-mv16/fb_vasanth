@@ -1,13 +1,13 @@
 package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.AuthenticationDAO;
-import com.facebook.DAOConnection.JDBCConnection;
+import com.facebook.DAOConnection.DatabaseAccessConnection;
+import com.facebook.customException.DataBaseAccessException;
 import com.facebook.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * <p>
@@ -29,6 +29,13 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
     private AuthenticationDAOImpl() {
     }
 
+    /**
+     * <p>
+     * Gets the instance of the authentication DAO
+     * </p>
+     *
+     * @return Returns the instance of the authentication DAO
+     */
     public static AuthenticationDAOImpl getInstance() {
         if(null == authenticationDAOImpl) {
             authenticationDAOImpl = new AuthenticationDAOImpl();
@@ -48,7 +55,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
     public boolean signUp(final User user)  {
         final String sql = "insert into users(name, phonenumber, password, email, gender, dateofbirth ) values(?, ?, ?, ?, ?::gender, ?)";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
@@ -62,7 +69,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             connection.commit();
 
             return true;
-        } catch (final Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -93,8 +100,8 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
     public boolean isUserMobileNumberExists(final User user) {
         final String sql = "select * from users where phonenumber = ? and password = ?;";
 
-        try (final Connection connection = JDBCConnection.getConnection();
-                final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
             preparedStatement.setString(1, user.getMobileNumber());
@@ -102,10 +109,10 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             return resultSet.next();
-        } catch (final Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -123,20 +130,19 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
     public boolean isUserEmailExists(final User user) {
         final String sql = "select * from users where email = ? and password = ?";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
-
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getPassword());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             return resultSet.next();
-        } catch (final Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -155,23 +161,22 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
     public Long getUserId(final User user) {
         final String sql = "select id from users where phonenumber = ? or email = ?";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
-
             preparedStatement.setString(1, user.getMobileNumber());
             preparedStatement.setString(2, user.getEmail());
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             if (resultSet.next()) {
                 return resultSet.getLong("id");
             }
-        } catch (final Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception exception) {
+            throw new DataBaseAccessException("Problem in connection, check it out");
         }
 
         return null;

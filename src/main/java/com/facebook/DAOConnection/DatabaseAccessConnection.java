@@ -15,17 +15,17 @@ import java.util.concurrent.BlockingQueue;
  * @author vasanth
  * @version 1.1
  */
-public class JDBCConnection {
-    private static JDBCConnection connection;
+public class DatabaseAccessConnection {
+    private static DatabaseAccessConnection connection;
     private static final Integer MAX_POOL_SIZE = 10;
     private static BlockingQueue<Connection> connectionPool;
 
     /**
      * <p>
-     *
+     * Enables the creation of only one object at a time
      * </p>
      */
-    private JDBCConnection() {
+    private DatabaseAccessConnection() {
         connectionPool = new ArrayBlockingQueue<>(MAX_POOL_SIZE);
 
         createPool();
@@ -38,8 +38,8 @@ public class JDBCConnection {
      *
      * @return Returns the instance of the JDBC connection class
      */
-    public static JDBCConnection getInstance() {
-        return null == connection ? connection = new JDBCConnection() : connection;
+    public static DatabaseAccessConnection getInstance() {
+        return null == connection ? connection = new DatabaseAccessConnection() : connection;
     }
 
     /**

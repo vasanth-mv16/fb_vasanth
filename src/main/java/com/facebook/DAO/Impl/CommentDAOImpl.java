@@ -1,7 +1,7 @@
 package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.CommentDAO;
-import com.facebook.DAOConnection.JDBCConnection;
+import com.facebook.DAOConnection.DatabaseAccessConnection;
 import com.facebook.model.Comment;
 
 import java.sql.Connection;
@@ -54,7 +54,7 @@ public class CommentDAOImpl implements CommentDAO {
     public boolean create(final Comment comment) {
         final String sql = "insert into comments(user_id, post_id, message) values (?,?,?);";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
@@ -63,10 +63,10 @@ public class CommentDAOImpl implements CommentDAO {
             preparedStatement.setString(3, comment.getMessage());
             preparedStatement.executeUpdate();
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             return true;
-        } catch (final Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -85,17 +85,17 @@ public class CommentDAOImpl implements CommentDAO {
     public boolean delete(Long id) {
         final String sql = "delete from comments where id = ?";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             return true;
-        } catch (final Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 

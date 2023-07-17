@@ -29,7 +29,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AUTHENTICATION_DAO_IMPL.signUp(user);
     }
 
-
     /**
      * <p>
      * Authenticates a user by performing a sign-in operation

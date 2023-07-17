@@ -1,7 +1,5 @@
 package com.facebook.view.validation;
 
-import com.facebook.model.User;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -21,7 +19,7 @@ public class UserValidation {
 
     /**
      * <p>
-     * Default constructor for user validation
+     * Enables the creation of only one object at a time
      * </p>
      */
     private UserValidation() {
@@ -32,7 +30,7 @@ public class UserValidation {
      * Gets the instance of the user validation
      * </p>
      *
-     * @return Returns the singleton instance of the user validation class
+     * @return Returns instance of the user validation class
      */
     public static UserValidation getInstance() {
         if (null == userValidation) {

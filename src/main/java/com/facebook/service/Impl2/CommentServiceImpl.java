@@ -18,7 +18,7 @@ public class CommentServiceImpl implements CommentService {
      * @return true, if the comment is created, otherwise false
      */
     @Override
-    public boolean create(Comment comment) {
+    public boolean create(final Comment comment) {
         return COMMENT_DAO_IMPL.create(comment);
     }
 
@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
      * @return true, if the comment is deleted, otherwise false
      */
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(final Long id) {
         return COMMENT_DAO_IMPL.delete(id);
     }
 }

@@ -1,7 +1,7 @@
 package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.UserDAO;
-import com.facebook.DAOConnection.JDBCConnection;
+import com.facebook.DAOConnection.DatabaseAccessConnection;
 import com.facebook.model.User;
 
 import java.sql.Connection;
@@ -54,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
     public User get(final Long id) {
         final String sql = "select * from users where id = ?";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
@@ -72,7 +72,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setPassword(resultSet.getString("password"));
                 user.setMobileNumber(resultSet.getString("phonenumber"));
                 connection.commit();
-                JDBCConnection.releaseConnection(connection);
+                DatabaseAccessConnection.releaseConnection(connection);
 
                 return user;
             }
@@ -94,14 +94,14 @@ public class UserDAOImpl implements UserDAO {
     public boolean delete(final Long id) {
         final String sql = "delete from users where id = ?";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -122,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
     public boolean update(final User user) {
         final String sql = "update users set name = ?, phonenumber = ?, email = ?, password = ? where id = ?";
 
-        try (final Connection connection = JDBCConnection.getConnection();
+        try (final Connection connection = DatabaseAccessConnection.getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
@@ -133,7 +133,7 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setLong(5, user.getId());
             preparedStatement.executeUpdate();
             connection.commit();
-            JDBCConnection.releaseConnection(connection);
+            DatabaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
