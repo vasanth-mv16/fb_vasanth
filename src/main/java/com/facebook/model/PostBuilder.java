@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  */
 public class PostBuilder {
 
-    Post post;
+    private Post post;
 
     public PostBuilder() {
         this.post = new Post();

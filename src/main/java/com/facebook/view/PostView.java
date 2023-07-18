@@ -107,39 +107,85 @@ public class PostView extends CommonView {
 
     /**
      * <p>
+     * Collects and validates post options
+     * </p>
+     *
+     * @return Returns {@link UserView.UserOptions} of the user
+     */
+    private PostOptions getOptions() {
+        System.out.println(String.join("\n", "CLICK 1 TO CREATE", "CLICK 2 TO GET", "CLICK 3 TO GET USING ID",
+                "CLICK 4 TO DELETE", "CLICK 5 TO UPDATE", "CLICK 6 TO DISPLAY LIKE DETAILS", "CLICK 7 TO DISPLAY COMMENT OPTIONS",
+                "CLICK 8 TO DISPLAY USER OPTION"));
+        final PostOptions postOptions = PostOptions.setPostOptions(userView.getChoiceAndValidate());
+
+        if (null != postOptions) {
+            return postOptions;
+        } else {
+            System.out.println("INVALID USER GENDER, PLEASE SELECT THE ABOVE CHOICES");
+
+            return getOptions();
+        }
+    }
+
+    /**
+     * <p>
+     * An enum with values create, getAll, get, delete, update, displayLike, displayComment, displayUser
+     * </p>
+     */
+    private enum PostOptions {
+
+        create(1), getAll(2), get(3), delete(4), update(5), displayLike(6),
+        displayComment(7), displayUser(8);
+        final int choice;
+
+        PostOptions(final int choice) {
+            this.choice = choice;
+        }
+
+        public static PostOptions setPostOptions(final int choice) {
+            for (final PostOptions existingPostOptions :PostOptions.values()) {
+
+                if (existingPostOptions.choice == choice) {
+                    return existingPostOptions;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * <p>
      * Shows the menu details for the user to post, like, comment and edit
      * </p>
      *
      * @param userId Refer the user id for the post
      */
     public void displayPostDetails(final Long userId) {
-        System.out.println(String.join("\n", "CLICK 1 TO CREATE", "CLICK 2 TO GET", "CLICK 3 TO GET USING ID",
-                "CLICK 4 TO DELETE", "CLICK 5 TO UPDATE", "CLICK 6 TO DISPLAY LIKE DETAILS", "CLICK 7 TO DISPLAY COMMENT OPTIONS",
-                "CLICK 8 TO DISPLAY USER OPTION"));
 
-        switch (userView.getChoiceAndValidate()) {
-            case 1:
+        switch (getOptions()) {
+            case create:
                 create(userId);
                 break;
-            case 2:
+            case getAll:
                 getAll(userId);
                 break;
-            case 3:
+            case get:
                 get();
                 break;
-            case 4:
+            case delete:
                 delete();
                 break;
-            case 5:
+            case update:
                 update();
                 break;
-            case 6:
+            case displayLike:
                 likeView.displayLikeDetails(userId);
                 break;
-            case 7:
+            case displayComment:
                 commentView.displayCommentDetails(userId);
                 break;
-            case 8:
+            case displayUser:
                 userView.displaysUserOptions(userId);
                 break;
             default:

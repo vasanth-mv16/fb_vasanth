@@ -62,6 +62,53 @@ public class CommentView extends CommonView {
 
     /**
      * <p>
+     * Collects and validates comment options
+     * </p>
+     *
+     * @return Returns {@link CommentOption} of the user
+     */
+    private CommentOption getOptions() {
+        System.out.println(String.join("\n", "CLICK 1 TO CREATE LIKE", "CLICK 2 TO GET ALL LIKES",
+                "CLICK 3 TO GET LIKE COUNT", "CLICK 4 TO DELETE", "CLICK 5 TO DISPLAY POST DETAILS", "CLICK 6 TO DISPLAY USER OPTIONS"));
+        final CommentOption commentOption = CommentOption.setCommentOptions(userView.getChoiceAndValidate());
+
+        if (null != commentOption) {
+            return commentOption;
+        } else {
+            System.out.println("INVALID USER GENDER, PLEASE SELECT THE ABOVE CHOICES");
+
+            return getOptions();
+        }
+    }
+
+    /**
+     * <p>
+     * An enum with values create, delete, displayPost
+     * </p>
+     */
+    private enum CommentOption {
+
+        create(1), delete(2), displayPost(3);
+        final int choice;
+
+        CommentOption(final int choice) {
+            this.choice = choice;
+        }
+
+        public static CommentOption setCommentOptions(final int choice) {
+            for (final CommentOption existingCommentOptions : CommentOption.values()) {
+
+                if (existingCommentOptions.choice == choice) {
+                    return existingCommentOptions;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * <p>
      * Shows the menu details for the user to comment the post
      * </p>
      *
@@ -70,14 +117,14 @@ public class CommentView extends CommonView {
     public void displayCommentDetails(final Long userId) {
         System.out.println("CLICK 1 TO CREATE\nCLICK 2 TO DELETE\nCLICK 3 TO DISPLAY POST DETAILS");
 
-        switch (userView.getChoiceAndValidate()) {
-            case 1:
+        switch (getOptions()) {
+            case create:
                 create(userId);
                 break;
-            case 2:
+            case delete:
                 delete();
                 break;
-            case 3:
+            case displayPost:
                 postView.displayPostDetails(userId);
                 break;
             default:

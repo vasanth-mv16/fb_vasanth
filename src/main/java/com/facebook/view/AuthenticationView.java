@@ -15,8 +15,8 @@ import com.facebook.view.validation.UserValidation;
  */
 public class AuthenticationView extends CommonView {
 
-    private final AuthenticationController authenticationController = AuthenticationController.getInstance();
-    private final UserValidation userValidation = UserValidation.getInstance();
+    private final AuthenticationController authenticationController;
+    private final UserValidation userValidation;
     private final UserView userView;
     private static AuthenticationView authenticationView;
 
@@ -27,6 +27,8 @@ public class AuthenticationView extends CommonView {
      */
     private AuthenticationView() {
         userView = UserView.getInstance();
+        authenticationController = AuthenticationController.getInstance();
+        userValidation = UserValidation.getInstance();
     }
 
     /**
@@ -46,22 +48,66 @@ public class AuthenticationView extends CommonView {
 
     /**
      * <p>
+     * An enum with values signUp, signIn, exit
+     * </p>
+     */
+    private enum UserOption {
+
+        signUp(1), signIn(2), exit(3);
+        final int choice;
+
+        UserOption(final int choice) {
+            this.choice = choice;
+        }
+
+        public static UserOption setUserOptions(final int choice) {
+            for (final UserOption existingUserOptions : UserOption.values()) {
+
+                if (existingUserOptions.choice == choice) {
+                    return existingUserOptions;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * <p>
+     * Collects and validates user options
+     * </p>
+     *
+     * @return Returns {@link UserOption} of the user
+     */
+    private UserOption getOptions() {
+        System.out.println("\tFACEBOOK\nCLICK 1 TO SIGN UP\nCLICK 2 TO SIGN IN\nCLICK 3 TO EXIT");
+        final UserOption userOption = UserOption.setUserOptions(userView.getChoiceAndValidate());
+
+        if (null != userOption) {
+            return userOption;
+        } else {
+            System.out.println("INVALID USER GENDER, PLEASE SELECT THE ABOVE CHOICES");
+
+            return getOptions();
+        }
+    }
+
+    /**
+     * <p>
      * Displays the menu details
      * </p>
      */
     public void displayMenu() {
         final UserBuilder user = new UserBuilder();
 
-        System.out.println("\tFACEBOOK\nCLICK 1 TO SIGN UP\nCLICK 2 TO SIGN IN\nCLICK 3 TO EXIT");
-
-        switch (userView.getChoiceAndValidate()) {
-            case 1:
+        switch (getOptions()) {
+            case signUp:
                 signUp(user);
                 break;
-            case 2:
+            case signIn:
                 signIn(user);
                 break;
-            case 3:
+            case exit:
                 System.exit(0);
             default:
                 System.out.println("INVALID CHOICE");

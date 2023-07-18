@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     private static AuthenticationDAOImpl authenticationDAOImpl;
+    private final DatabaseAccessConnection databaseAccessConnection;
 
     /**
      * <p>
@@ -27,6 +28,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
      * </p>
      */
     private AuthenticationDAOImpl() {
+        databaseAccessConnection = DatabaseAccessConnection.getInstance();
     }
 
     /**
@@ -67,6 +69,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             preparedStatement.setString(6, user.getDateOfBirth());
             preparedStatement.executeUpdate();
             connection.commit();
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -109,7 +112,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return resultSet.next();
         } catch (Exception exception) {
@@ -139,7 +142,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return resultSet.next();
         } catch (Exception exception) {
@@ -170,7 +173,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             if (resultSet.next()) {
                 return resultSet.getLong("id");

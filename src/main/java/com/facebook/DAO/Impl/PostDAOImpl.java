@@ -21,6 +21,7 @@ import java.util.Collection;
 public class PostDAOImpl implements PostDAO {
 
     private static PostDAO postDAOImpl;
+    private final DatabaseAccessConnection databaseAccessConnection;
 
     /**
      * <p>
@@ -28,6 +29,7 @@ public class PostDAOImpl implements PostDAO {
      * </p>
      */
     private PostDAOImpl() {
+        databaseAccessConnection = DatabaseAccessConnection.getInstance();
     }
 
     /**
@@ -67,7 +69,7 @@ public class PostDAOImpl implements PostDAO {
             preparedStatement.setTimestamp(4, posts.getUploadTime());
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -108,7 +110,7 @@ public class PostDAOImpl implements PostDAO {
                 POSTS.add(post);
             }
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -144,7 +146,7 @@ public class PostDAOImpl implements PostDAO {
                 post.setLocation(resultSet.getString("location"));
                 post.setUploadTime(resultSet.getTimestamp("uploadtime"));
                 connection.commit();
-                DatabaseAccessConnection.releaseConnection(connection);
+                databaseAccessConnection.releaseConnection(connection);
 
                 return post;
             }
@@ -177,7 +179,7 @@ public class PostDAOImpl implements PostDAO {
             preparedStatement.setLong(4, post.getUserId());
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -206,7 +208,7 @@ public class PostDAOImpl implements PostDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {

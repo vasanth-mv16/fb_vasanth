@@ -109,6 +109,53 @@ public class LikeView extends CommonView {
 
     /**
      * <p>
+     * Collects and validates like options
+     * </p>
+     *
+     * @return Returns {@link LikeOption} of the user
+     */
+    private LikeOption getOptions() {
+        System.out.println(String.join("\n", "CLICK 1 TO CREATE LIKE", "CLICK 2 TO GET ALL LIKES",
+                "CLICK 3 TO GET LIKE COUNT", "CLICK 4 TO DELETE", "CLICK 5 TO DISPLAY POST DETAILS", "CLICK 6 TO DISPLAY USER OPTIONS"));
+        final LikeOption likeOption = LikeOption.setLikeOptions(userView.getChoiceAndValidate());
+
+        if (null != likeOption) {
+            return likeOption;
+        } else {
+            System.out.println("INVALID USER GENDER, PLEASE SELECT THE ABOVE CHOICES");
+
+            return getOptions();
+        }
+    }
+
+    /**
+     * <p>
+     * An enum with values create, get, getCount, delete, displayLike, displayUser
+     * </p>
+     */
+    private enum LikeOption {
+
+        create(1), get(2), getCount(3), delete(4), displayPost(5), displayUser(6);
+        final int choice;
+
+        LikeOption(final int choice) {
+            this.choice = choice;
+        }
+
+        public static LikeOption setLikeOptions(final int choice) {
+            for (final LikeOption existingLikeOptions : LikeOption.values()) {
+
+                if (existingLikeOptions.choice == choice) {
+                    return existingLikeOptions;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * <p>
      * Shows the menu details for the user to like the post
      * </p>
      *
@@ -118,23 +165,23 @@ public class LikeView extends CommonView {
         System.out.println(String.join("\n", "CLICK 1 TO CREATE LIKE", "CLICK 2 TO GET ALL LIKES",
                 "CLICK 3 TO GET LIKE COUNT", "CLICK 4 TO DELETE", "CLICK 5 TO DISPLAY POST DETAILS", "CLICK 6 TO DISPLAY USER OPTIONS"));
 
-        switch (userView.getChoiceAndValidate()) {
-            case 1:
+        switch (getOptions()) {
+            case create:
                 create(userId);
                 break;
-            case 2:
+            case get:
                 get();
                 break;
-            case 3:
+            case getCount:
                 getCount();
                 break;
-            case 4:
+            case delete:
                 delete();
                 break;
-            case 5:
+            case displayPost:
                 postView.displayPostDetails(userId);
                 break;
-            case 6:
+            case displayUser:
                 userView.displaysUserOptions(userId);
                 break;
             default:

@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 public class UserDAOImpl implements UserDAO {
 
     private static UserDAOImpl userDAOImpl;
+    private final DatabaseAccessConnection databaseAccessConnection;
 
     /**
      * <p>
@@ -26,6 +27,7 @@ public class UserDAOImpl implements UserDAO {
      * </p>
      */
     public UserDAOImpl() {
+        databaseAccessConnection = DatabaseAccessConnection.getInstance();
     }
 
     /**
@@ -72,7 +74,7 @@ public class UserDAOImpl implements UserDAO {
                 user.setPassword(resultSet.getString("password"));
                 user.setMobileNumber(resultSet.getString("phonenumber"));
                 connection.commit();
-                DatabaseAccessConnection.releaseConnection(connection);
+                databaseAccessConnection.releaseConnection(connection);
 
                 return user;
             }
@@ -101,7 +103,7 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -133,7 +135,8 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setLong(5, user.getId());
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
+
 
             return true;
         } catch (Exception exception) {

@@ -254,6 +254,53 @@ public class UserView extends CommonView {
 
     /**
      * <p>
+     * Collects and validates user options
+     * </p>
+     *
+     * @return Returns {@link UserOptions} of the user
+     */
+    public UserOptions getOptions() {
+        System.out.println(String.join("\n", "CLICK 1 TO UPDATE", "CLICK 2 TO DELETE",
+                "CLICK 3 TO GET USERS", "CLICK 4 TO DISPLAY POST DETAILS", "CLICK 5 TO LOGOUT", "CLICK 6 TO EXIT"));
+        final UserOptions userOptions = UserOptions.setUserOptions(getChoiceAndValidate());
+
+        if (null != userOptions) {
+            return userOptions;
+        } else {
+            System.out.println("INVALID USER GENDER, PLEASE SELECT THE ABOVE CHOICES");
+
+            return getOptions();
+        }
+    }
+
+    /**
+     * <p>
+     * An enum with values update, delete, get, displayPost, logout, exit
+     * </p>
+     */
+    public enum UserOptions {
+
+        update(1), delete(2), get(3), displayPost(4), logout(5), exit(6);
+        final int choice;
+
+        UserOptions(final int choice) {
+            this.choice = choice;
+        }
+
+        public static UserOptions setUserOptions(final int choice) {
+            for (final UserOptions existingUserOptions : UserOptions.values()) {
+
+                if (existingUserOptions.choice == choice) {
+                    return existingUserOptions;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
+     * <p>
      * Displays the user options and performs the action based on the user's choice.
      * </p>
      *
@@ -262,26 +309,23 @@ public class UserView extends CommonView {
     public void displaysUserOptions(final Long id) {
         final PostView postView = PostView.getInstance();
 
-        System.out.println(String.join("\n", "CLICK 1 TO UPDATE", "CLICK 2 TO DELETE",
-                "CLICK 3 TO GET USERS", "CLICK 4 TO DISPLAY POST DETAILS", "CLICK 5 TO LOGOUT", "CLICK 6 TO EXIT"));
-
-        switch (getChoiceAndValidate()) {
-            case 1:
+        switch (getOptions()) {
+            case update:
                 update(id);
                 break;
-            case 2:
+            case delete:
                 delete();
                 break;
-            case 3:
+            case get:
                 get();
                 break;
-            case 4:
+            case displayPost:
                 postView.displayPostDetails(id);
                 break;
-            case 5:
+            case logout:
                 logout();
                 break;
-            case 6:
+            case exit:
                 System.out.println("EXITING");
                 SCANNER.close();
                 System.exit(0);

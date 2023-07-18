@@ -25,7 +25,7 @@ public class DatabaseAccessConnection {
      * Enables the creation of only one object at a time
      * </p>
      */
-    private DatabaseAccessConnection() {
+    public DatabaseAccessConnection() {
         connectionPool = new ArrayBlockingQueue<>(MAX_POOL_SIZE);
 
         createPool();
@@ -102,12 +102,18 @@ public class DatabaseAccessConnection {
         return null;
     }
 
-    public static void releaseConnection(final Connection connection) {
+    /**
+     * <p>
+     * Release the connection object from the source
+     * </p>
+     *
+     * @param connection Refers the connection object
+     */
+    public void releaseConnection(final Connection connection) {
         if (null != connection) {
             connectionPool.offer(connection);
         }
     }
-
 }
 
 

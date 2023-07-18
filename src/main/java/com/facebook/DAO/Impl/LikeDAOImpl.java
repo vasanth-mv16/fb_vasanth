@@ -21,6 +21,7 @@ import java.util.Collection;
 public class LikeDAOImpl implements LikeDAO {
 
     private static LikeDAO likeDAOImpl;
+    private final DatabaseAccessConnection databaseAccessConnection;
 
     /**
      * <p>
@@ -28,6 +29,7 @@ public class LikeDAOImpl implements LikeDAO {
      * </p>
      */
     private LikeDAOImpl() {
+        databaseAccessConnection = DatabaseAccessConnection.getInstance();
     }
 
     /**
@@ -65,7 +67,7 @@ public class LikeDAOImpl implements LikeDAO {
             preparedStatement.setLong(2, like.getPostId());
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -103,7 +105,7 @@ public class LikeDAOImpl implements LikeDAO {
                 like.setId(resultSet.getLong("id"));
                 likes.add(like);
                 connection.commit();
-                DatabaseAccessConnection.releaseConnection(connection);
+                databaseAccessConnection.releaseConnection(connection);
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -137,7 +139,7 @@ public class LikeDAOImpl implements LikeDAO {
                 like.setPostId(resultSet.getLong("post_id"));
             }
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -164,7 +166,7 @@ public class LikeDAOImpl implements LikeDAO {
             preparedStatement.setLong(1, likeId);
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {

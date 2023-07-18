@@ -18,13 +18,14 @@ import java.sql.PreparedStatement;
 public class CommentDAOImpl implements CommentDAO {
 
     private static CommentDAO commentDAOImpl;
-
+    private final DatabaseAccessConnection databaseAccessConnection;
     /**
      * <p>
      * Enables the creation of only one object at a time
      * </p>
      */
     private CommentDAOImpl() {
+        databaseAccessConnection = DatabaseAccessConnection.getInstance();
     }
 
     /**
@@ -63,7 +64,7 @@ public class CommentDAOImpl implements CommentDAO {
             preparedStatement.setString(3, comment.getMessage());
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
@@ -92,7 +93,7 @@ public class CommentDAOImpl implements CommentDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             connection.commit();
-            DatabaseAccessConnection.releaseConnection(connection);
+            databaseAccessConnection.releaseConnection(connection);
 
             return true;
         } catch (Exception exception) {
