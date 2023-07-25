@@ -5,17 +5,25 @@ import com.facebook.DAO.Impl.CommentDAOImpl;
 import com.facebook.model.Comment;
 import com.facebook.service.CommentService;
 
+/**
+ * <p>
+ * Implementation of the comment service interface for managing comments
+ * </p>
+ *
+ * @author vasanth
+ * @version 1.0
+ */
 public class CommentServiceImpl implements CommentService {
 
     private final CommentDAO COMMENT_DAO_IMPL = CommentDAOImpl.getInstance();
 
     /**
      * <p>
-     * Checks the comment is created
+     * {@inheritDoc}
      * </p>
      *
-     * @param comment Refer {@link Comment} to create
-     * @return true, if the comment is created, otherwise false
+     * @param comment Refer {@link Comment} that comment to be created
+     * @return Returns true, if the comment is created, otherwise false
      */
     @Override
     public boolean create(final Comment comment) {
@@ -24,11 +32,11 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * <p>
-     * Deletes the comment for post by the id
+     * {@inheritDoc}
      * </p>
      *
      * @param id Refers the id for delete the comment
-     * @return true, if the comment is deleted, otherwise false
+     * @return Returns true, if the comment is deleted, otherwise false
      */
     @Override
     public boolean delete(final Long id) {

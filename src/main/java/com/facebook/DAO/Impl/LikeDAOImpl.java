@@ -2,17 +2,20 @@ package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.LikeDAO;
 import com.facebook.DAOConnection.DataSourceConnection;
+import com.facebook.customException.DataBaseAccessException;
 import com.facebook.model.Like;
+import com.facebook.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * <p>
- * Provides the Service for the like DAO
+ * Provides a Service for the like DAO
  * </p>
  *
  * @author vasanth
@@ -35,7 +38,7 @@ public class LikeDAOImpl implements LikeDAO {
      * Gets the instance of like service implementation
      * </p>
      *
-     * @return Returns the singleton instance of the like service implementation class.
+     * @return Returns instance of the like service implementation class.
      */
     public static LikeDAO getInstance() {
         if (null == likeDAOImpl) {
@@ -47,11 +50,11 @@ public class LikeDAOImpl implements LikeDAO {
 
     /**
      * <p>
-     * Creates a like and inserts it into the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param like Refers the like to create and insert.
-     * @return True, if the post was created and inserted successfully, otherwise false
+     * @param like Refer {@link Like} that like to be created
+     * @return Returns true if the like is created, otherwise false
      */
     @Override
     public boolean create(final Like like) {
@@ -67,7 +70,7 @@ public class LikeDAOImpl implements LikeDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -76,47 +79,45 @@ public class LikeDAOImpl implements LikeDAO {
 
     /**
      * <p>
-     * Retrieves all likes with the user id from the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param userId Refers the user id to retrieve the likes
-     * @return Collection of {@link Like} objects with the user id
+     * @param postId Refers the post id to retrieves like details
+     * @return Returns collection of likes for the user
      */
     @Override
-    public Collection<Like> get(final Long userId) {
-        final Collection<Like> likes = new ArrayList<>();
-        final String sql = "select * from like_post where user_id = ?";
+    public Collection<User> get(final Long postId) {
+        final Collection<User> users = new ArrayList<>();
+        final String sql = "select s.name from sign as s inner join like_post as lp on s.id = lp.userid where lp.postid = ?";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
-            preparedStatement.setLong(1, userId);
+            preparedStatement.setLong(1, postId);
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                final Like like = new Like();
+                final User user = new User();
 
-                like.setUserId(resultSet.getLong("user_id"));
-                like.setPostId(resultSet.getLong("post_id"));
-                like.setId(resultSet.getLong("id"));
-                likes.add(like);
+                user.setName(resultSet.getString("name"));
+                users.add(user);
                 connection.commit();
             }
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
-        return likes;
+        return users;
     }
 
     /**
      * <p>
-     * Gets the like count of the post id
+     * {@inheritDoc}
      * </p>
      *
-     * @param postId Represents the user id to get the like count
-     * @return Returns count of likes for the post.
+     * @param postId Represents the post id to get the like count
+     * @return Returns the like count for the specified post
      */
     @Override
     public Long getCount(final Long postId) {
@@ -135,8 +136,8 @@ public class LikeDAOImpl implements LikeDAO {
                 like.setPostId(resultSet.getLong("post_id"));
             }
             connection.commit();
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DataBaseAccessException(exception.getMessage());
         }
 
         return postId;
@@ -144,11 +145,11 @@ public class LikeDAOImpl implements LikeDAO {
 
     /**
      * <p>
-     * Unlikes the post by passing like id
+     * {@inheritDoc}
      * </p>
      *
      * @param likeId Refers the id for unlike the post
-     * @return True, if the post was unliked, otherwise false
+     * @return Returns true if the like is unliked, otherwise false
      */
     @Override
     public boolean delete(final Long likeId) {
@@ -163,7 +164,7 @@ public class LikeDAOImpl implements LikeDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 

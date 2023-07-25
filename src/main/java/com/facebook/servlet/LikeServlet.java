@@ -2,6 +2,9 @@ package com.facebook.servlet;
 
 import com.facebook.controller.LikeController;
 import com.facebook.model.Like;
+import com.facebook.model.LikeBuilder;
+import com.facebook.model.User;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
@@ -10,10 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 /**
  * <p>
- *  Handles request and response for the "/like" url
+ * Handles request and response for Like creation and deletion
  * </p>
  *
  * @author vasanth
@@ -26,39 +30,33 @@ public class LikeServlet extends HttpServlet {
     private final LikeController likeController;
 
     public LikeServlet() {
-        commonReader = CommonReader.getInstance();
-        likeController = LikeController.getInstance();
+        this.commonReader = CommonReader.getInstance();
+        this.likeController = LikeController.getInstance();
     }
 
     /**
      * <p>
-     * Handles request and response for the Like creation
+     * Handles request and response for the like creation
      * </p>
      *
-     * @param request HTTP request object containing client request information
-     * @param response HTTP response object for sending data back to the client
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the client
      * @throws IOException File that doesn't exist at specified location
      */
-    public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonData = new JSONObject(jsonString);
-        final Like like = new Like();
+        final LikeBuilder like = new LikeBuilder();
 
         like.setPostId(jsonData.getLong("postid"));
         like.setUserId(jsonData.getLong("userid"));
 
         final JSONObject jsonResponse = new JSONObject();
 
-        if (likeController.create(like)) {
-            jsonResponse.put("message", "Liked Successfully");
-        } else {
-            jsonResponse.put("message", "Unable to Like");
-        }
-
+        jsonResponse.put("message", likeController.create(like.build()) ? "Liked Successfully" : "Unable to Like");
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
         out.print(jsonResponse);
-
     }
 
     /**
@@ -66,23 +64,57 @@ public class LikeServlet extends HttpServlet {
      * Handles request and response for the like deletion
      * </p>
      *
-     * @param request HTTP request object containing client request information
-     * @param response HTTP response object for sending data back to the client
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the client
      * @throws IOException File that doesn't exist at specified location
      */
-    public void doDelete(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doDelete(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonData = new JSONObject(jsonString);
         final JSONObject jsonResponse = new JSONObject();
 
-        if (likeController.delete(jsonData.getLong("id"))) {
-            jsonResponse.put("message", "Post Unliked successfully");
-        } else {
-            jsonResponse.put("message", "Post not Unliked");
-        }
-
+        jsonResponse.put("message", likeController.delete(jsonData.getLong("id")) ? "Post Unliked successfully" :
+                "Post not Unliked");
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
         out.print(jsonResponse);
+    }
+
+    /**
+     * <p>
+     * Handles request and response for the like retrieving by user
+     * </p>
+     *
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the client
+     * @throws IOException File that doesn't exist at specified location
+     */
+    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+        final JSONObject jsonResponse = new JSONObject();
+        final PrintWriter out = response.getWriter();
+        final Like like = new Like();
+        final Collection<User> users = likeController.get(like.getPostId());
+
+        if (null != users) {
+
+            final JSONArray jsonArray = new JSONArray();
+
+            for (final User user : users) {
+                final JSONObject jsonObject = new JSONObject();
+
+                jsonObject.put("id", user.getId());
+                jsonObject.put("name", user.getName());
+                jsonObject.put("mobileNumber", user.getMobileNumber());
+                jsonObject.put("email", user.getEmail());
+                jsonObject.put("password", user.getPassword());
+                jsonObject.put("dateOfBirth", user.getDateOfBirth());
+                jsonArray.put(jsonObject);
+            }
+            out.println(jsonArray);
+
+            return;
+        }
+        jsonResponse.put("message", "Post Not Found");
+        out.println(jsonResponse);
     }
 }

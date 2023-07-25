@@ -21,11 +21,11 @@ public class PostServiceImpl implements PostService {
 
     /**
      * <p>
-     * Checks if the post details are created, and adds the post.
+     * {@inheritDoc}
      * </p>
      *
-     * @param post Refers {@link Post} to add
-     * @return True if the post is successfully added, false otherwise
+     * @param post Refers {@link Post} that post to be added
+     * @return Returns true if the post is successfully added, false otherwise
      */
     @Override
     public boolean create(final Post post) {
@@ -34,11 +34,11 @@ public class PostServiceImpl implements PostService {
 
     /**
      * <p>
-     * Retrieves the collection of post details.
+     * {@inheritDoc}
      * </p>
      *
-     * @param userId
-     * @return The collection of posts
+     * @param userId Refers the specified user to retrieve all the post
+     * @return Returns the collection of posts for the specified user
      */
     @Override
     public Collection<Post> getAll(final Long userId) {
@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
 
     /**
      * <p>
-     * Retrieves the post details using the post id.
+     * {@inheritDoc}
      * </p>
      *
      * @param id Represents the id of the post to retrieve
@@ -60,12 +60,12 @@ public class PostServiceImpl implements PostService {
 
     /**
      * <p>
-     * Checks if the post details are updated.
+     * {@inheritDoc}
      * </p>
      *
      * @param post Refers {@link Post} to update
-     * @param id
-     * @return True if the post is successfully updated, false otherwise
+     * @param id Represents the id of the post to be updated
+     * @return Returns true if the post is successfully updated, false otherwise
      */
     @Override
     public boolean update(final Post post, final Long id) {

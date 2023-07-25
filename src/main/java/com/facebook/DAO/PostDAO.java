@@ -6,7 +6,7 @@ import java.util.Collection;
 
 /**
  * <p>
- * Provides service for the post DAO
+ * Provides a service for the post DAO
  * </p>
  *
  * @author vasanth
@@ -16,11 +16,11 @@ public interface PostDAO {
 
     /**
      * <p>
-     * Checks if the post details are created, and adds the post
+     * Checks if the post details are created
      * </p>
      *
-     * @param post Refers {@link Post} to add
-     * @return True if the post is successfully added, false otherwise
+     * @param post Refers {@link Post} that post to be added
+     * @return Returns true if the post is successfully added, false otherwise
      */
     boolean create(final Post post);
 
@@ -29,7 +29,8 @@ public interface PostDAO {
      * Retrieves the collection of post details
      * </p>
      *
-     * @return The collection of posts
+     * @param userId Refers the user id to retrieve all the post
+     * @return Returns collection of posts for specified user
      */
     Collection<Post> getAll(final Long userId);
 
@@ -48,19 +49,19 @@ public interface PostDAO {
      * Checks if the post details are updated
      * </p>
      *
-     * @param post Refers {@link Post} to update
-     * @param id
-     * @return True if the post is successfully updated, false otherwise
+     * @param post Reference {@link Post} that post to be updated
+     * @param id Refers to the id used to post the update
+     * @return Returns true if the post is successfully updated, false otherwise
      */
     boolean update(final Post post, final Long id);
 
     /**
      * <p>
-     * Deletes the post details by passing id
+     * Deletes the post details by using the id
      * </p>
      *
      * @param id Refers the id for delete the post
-     * @return True if the post is successfully updated, false otherwise
+     * @return Returns true if the post is successfully updated, false otherwise
      */
     boolean delete(final Long id);
 }

@@ -6,7 +6,7 @@ import com.facebook.service.Impl2.AuthenticationServiceImpl;
 
 /**
  * <p>
- * Given controller act us for request and respond
+ * Given controller act us for request and respond for user authentication
  * </p>
  *
  * @author vasanth
@@ -15,7 +15,7 @@ import com.facebook.service.Impl2.AuthenticationServiceImpl;
 public class AuthenticationController {
 
     private static AuthenticationController authenticationController;
-    private static final AuthenticationService AUTHENTICATION_SERVICE_IMPL = new AuthenticationServiceImpl();
+    private final AuthenticationService authenticationServiceImpl;
 
     /**
      * <p>
@@ -23,6 +23,7 @@ public class AuthenticationController {
      * </p>
      */
     private AuthenticationController() {
+        this.authenticationServiceImpl = new AuthenticationServiceImpl();
     }
 
     /**
@@ -42,36 +43,37 @@ public class AuthenticationController {
 
     /**
      * <p>
-     * Checks the user to be created
+     * Checks the user to be register
      * </p>
      *
      * @param user Refers {@link User} has to created
      * @return True if the user is created, false otherwise
      */
-    public boolean signUp(final User user) {
-        return AUTHENTICATION_SERVICE_IMPL.signUp(user);
+    public boolean registerUser(final User user) {
+        return authenticationServiceImpl.registerUser(user);
     }
 
     /**
      * <p>
-     * Checks the user sign in
+     * Checks the user authentication
      * </p>
      *
      * @param user Refers {@link User} has to sign in
      * @return True if the user is sign in, false otherwise
      */
-    public boolean signIn(final User user) {
-        return AUTHENTICATION_SERVICE_IMPL.signIn(user);
+    public boolean authenticateUser(final User user) {
+        return authenticationServiceImpl.authenticateUser(user);
     }
+
     /**
      * <p>
      * Retrieves the id of the user
      * </p>
      *
-     * @param user Refers {@link User} to get id
-     * @return The id of the user
+     * @param user Refers {@link User} to get the id
+     * @return Return id of the user
      */
     public Long getUserId(final User user) {
-        return AUTHENTICATION_SERVICE_IMPL.getUserId(user);
+        return authenticationServiceImpl.getUserId(user);
     }
 }

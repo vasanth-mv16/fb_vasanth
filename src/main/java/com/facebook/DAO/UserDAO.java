@@ -4,7 +4,7 @@ import com.facebook.model.User;
 
 /**
  * <p>
- * Provides service for the user details
+ * Provides a service for the user's information
  * </p>
  *
  * @author vasanth
@@ -17,18 +17,19 @@ public interface UserDAO {
      * Updates user details
      * </p>
      *
-     * @param user Refers {@link User} to update
-     * @return True if the user details are updated, false otherwise
+     * @param user Reference {@link User} that user to be updated
+     * @param id Refers the id for the updation
+     * @return Returns true if the user information has been updated, false otherwise
      */
     boolean update(final User user, final Long id);
 
     /**
      * <p>
-     * Deletes user details.
+     * Deletes user details
      * </p>
      *
      * @param id Represents the id of the user to be deleted
-     * @return True if the user details are successfully deleted, false otherwise
+     * @return Returns true if the user information has been deleted, false otherwise
      */
     boolean delete(final Long id);
 
@@ -38,8 +39,7 @@ public interface UserDAO {
      * </p>
      *
      * @param id Represents the id of the user to retrieve
-     * @return Returns {@link User} details
+     * @return Returns {@link User} details for specified id
      */
     User get(final Long id);
-
 }

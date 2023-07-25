@@ -3,13 +3,14 @@ package com.facebook.service.Impl2;
 import com.facebook.DAO.Impl.LikeDAOImpl;
 import com.facebook.DAO.LikeDAO;
 import com.facebook.model.Like;
+import com.facebook.model.User;
 import com.facebook.service.LikeService;
 
 import java.util.Collection;
 
 /**
  * <p>
- * Implements the following services for the like
+ * Implementation of the like service interface for managing likes
  * </p>
  *
  * @author vasanth
@@ -17,15 +18,15 @@ import java.util.Collection;
  */
 public class LikeServiceImpl implements LikeService {
 
-    private  final LikeDAO LIKE_DAO_IMPL = LikeDAOImpl.getInstance();
+    private final LikeDAO LIKE_DAO_IMPL = LikeDAOImpl.getInstance();
 
     /**
      * <p>
-     * Checks the like is created
+     * {@inheritDoc}
      * </p>
      *
-     * @param like Refer {@link Like} to create
-     * @return true, if the like is created, otherwise false
+     * @param like Refer {@link Like} that like to be created
+     * @return Returns true, if the like is created, otherwise false
      */
     @Override
     public boolean create(final Like like) {
@@ -34,24 +35,24 @@ public class LikeServiceImpl implements LikeService {
 
     /**
      * <p>
-     * Gets the like list details
+     * {@inheritDoc}
      * </p>
      *
-     * @param userId Refers the userId to get like
-     * @return Collection of likes
+     * @param postId Refers the post id to retrieves like details
+     * @return Returns collection of likes for the user
      */
     @Override
-    public Collection<Like> get(final Long userId) {
-        return LIKE_DAO_IMPL.get(userId);
+    public Collection<User> get(final Long postId) {
+        return LIKE_DAO_IMPL.get(postId);
     }
 
     /**
      * <p>
-     * Gets the like count for the user
+     * {@inheritDoc}
      * </p>
      *
      * @param postId Represents the user id to get the like count
-     * @return Gets the like count of the user
+     * @return Returns the like count of the  specified user
      */
     @Override
     public Long getCount(final Long postId) {
@@ -60,11 +61,11 @@ public class LikeServiceImpl implements LikeService {
 
     /**
      * <p>
-     * Deletes the like for post by the id
+     * {@inheritDoc}
      * </p>
      *
      * @param likeId Refers the id for unlike the post
-     * @return true, if the like is unliked, otherwise false
+     * @return Returns true, if the like is unliked, otherwise false
      */
     @Override
     public boolean delete(final Long likeId) {

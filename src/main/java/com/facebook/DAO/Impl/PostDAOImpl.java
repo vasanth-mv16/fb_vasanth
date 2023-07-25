@@ -2,17 +2,19 @@ package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.PostDAO;
 import com.facebook.DAOConnection.DataSourceConnection;
+import com.facebook.customException.DataBaseAccessException;
 import com.facebook.model.Post;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * <p>
- * Provides the following services for post
+ * Provides a following services for post
  * </p>
  *
  * @author vasanth
@@ -47,11 +49,11 @@ public class PostDAOImpl implements PostDAO {
 
     /**
      * <p>
-     * Creates a new post and inserts it into the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param posts The post to create and insert.
-     * @return True, if the post was created and inserted successfully, otherwise false
+     * @param posts Reference {@link Post} that post to create and insert
+     * @return Returns true, if the post was created and inserted successfully, otherwise false
      */
     @Override
     public boolean create(final Post posts) {
@@ -69,7 +71,7 @@ public class PostDAOImpl implements PostDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -78,16 +80,16 @@ public class PostDAOImpl implements PostDAO {
 
     /**
      * <p>
-     * Retrieves all posts with the user id from the database
+     * {@inheritDoc}
      * </p>
      *
      * @param user_id Refers the user id to retrieve the posts
-     * @return A collection of {@link Post} objects with the user id
+     * @return Return collection of {@link Post} objects with the user id
      */
     @Override
     public Collection<Post> getAll(final Long user_id) {
-        final Collection<Post> POSTS = new ArrayList<>();
-        final String sql = "select * from posts where user_id = ?";
+        final Collection<Post> posts = new ArrayList<>();
+        final String sql = "select id,userid,caption,location,uploadtime from user_post where userid = ?";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -99,19 +101,19 @@ public class PostDAOImpl implements PostDAO {
             while (resultSet.next()) {
                 final Post post = new Post();
 
-                post.setUserId(resultSet.getLong("user_id"));
+                post.setUserId(resultSet.getLong("userid"));
                 post.setId(resultSet.getLong("id"));
                 post.setCaption(resultSet.getString("caption"));
                 post.setLocation(resultSet.getString("location"));
                 post.setUploadTime(resultSet.getTimestamp("uploadtime"));
-                POSTS.add(post);
+                posts.add(post);
             }
             connection.commit();
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
-        return POSTS;
+        return posts;
     }
 
     /**
@@ -120,11 +122,11 @@ public class PostDAOImpl implements PostDAO {
      * </p>
      *
      * @param id Refers the id of the user to retrieve the posts
-     * @return A collection of {@link Post} objects with the user id
+     * @return Return {@link Post}for the specified user
      */
     @Override
     public Post get(final Long id) {
-        final String sql = "select * from user_post where id = ?";
+        final String sql = "select id,userid,caption,location,uploadtime from user_post where id = ?";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -145,8 +147,8 @@ public class PostDAOImpl implements PostDAO {
 
                 return post;
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DataBaseAccessException(exception.getMessage());
         }
 
         return null;
@@ -154,12 +156,12 @@ public class PostDAOImpl implements PostDAO {
 
     /**
      * <p>
-     * Updates the caption and location of a post in the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param post Refers the post for update caption and location
-     * @param id
-     * @return True if the post was updated successfully, otherwise false
+     * @param post Reference {@link Post} that post to be updated
+     * @param id Refers to the id used to post the update
+     * @return Returns true if the post is successfully updated, false otherwise
      */
     @Override
     public boolean update(final Post post, final Long id) {
@@ -177,7 +179,7 @@ public class PostDAOImpl implements PostDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -189,8 +191,8 @@ public class PostDAOImpl implements PostDAO {
      * Deletes a post from the database based on the post id
      * </p>
      *
-     * @param id Refer the id of the post to delete
-     * @return True, if the post was deleted successfully, otherwise false
+     * @param id Refers the id for delete the post
+     * @return Returns true if the post is successfully updated, false otherwise
      */
     @Override
     public boolean delete(final Long id) {
@@ -205,7 +207,7 @@ public class PostDAOImpl implements PostDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 

@@ -2,11 +2,13 @@ package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.UserDAO;
 import com.facebook.DAOConnection.DataSourceConnection;
+import com.facebook.customException.DataBaseAccessException;
 import com.facebook.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * <p>
@@ -33,7 +35,7 @@ public class UserDAOImpl implements UserDAO {
      * Gets the instance of user service implementation
      * </p>
      *
-     * @return Returns the singleton instance of the user service implementation class.
+     * @return Returns instance of the user service implementation class
      */
     public static UserDAOImpl getInstance() {
         if (null == userDAOImpl) {
@@ -45,14 +47,14 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * <p>
-     * Retrieves a user from the database through id
+     * {@inheritDoc}
      * </p>
      *
      * @param id Retrieves the id of the user
-     * @return Returns {@link User}with the specified ID if found, otherwise null
+     * @return Returns {@link User}with the specified id if found, otherwise null
      */
     public User get(final Long id) {
-        final String sql = "select * from sign where id = ?";
+        final String sql = "select id, name, mobilenumber,email, password, dateofbirth from sign where id = ?";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -74,8 +76,8 @@ public class UserDAOImpl implements UserDAO {
 
                 return user;
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (SQLException exception) {
+            throw new DataBaseAccessException("Problem in Database connection, check it out");
         }
 
         return null;
@@ -83,7 +85,7 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * <p>
-     * Deletes a user from the database based on id
+     * {@inheritDoc}
      * </p>
      *
      * @param id Refers the id of the user to delete
@@ -101,7 +103,7 @@ public class UserDAOImpl implements UserDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -110,11 +112,12 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * <p>
-     * Updates the details of a user in the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param user Refers {@link User}user object containing the updated user information.
-     * @return true if the user information is successfully updated, false otherwise.
+     * @param user Reference {@link User} that user to be updated
+     * @param id   Refers the id for update the user
+     * @return Returns true if the user information has been updated, false otherwise
      */
     public boolean update(final User user, final Long id) {
         final String sql = "update sign set name = ?, mobilenumber = ?, email = ?, password = ?, dateofbirth = ? where id = ?";
@@ -133,7 +136,7 @@ public class UserDAOImpl implements UserDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 

@@ -6,7 +6,7 @@ import com.facebook.service.Impl2.CommentServiceImpl;
 
 /**
  * <p>
- * Given comment controller acts as request and respond
+ * Given comment controller acts as request and respond for comment
  * </p>
  *
  * @author vasanth
@@ -15,7 +15,7 @@ import com.facebook.service.Impl2.CommentServiceImpl;
 public class CommentController {
 
     private static CommentController commentController;
-    private static final CommentService COMMENT_DAO = new CommentServiceImpl();
+    private final CommentService commentDAO;
 
     /**
      * <p>
@@ -23,11 +23,12 @@ public class CommentController {
      * </p>
      */
     private CommentController() {
+        this.commentDAO = new CommentServiceImpl();
     }
 
     /**
      * <p>
-     * Gets the instance of the comment controller
+     * Retrieve the instance of the comment controller
      * </p>
      *
      * @return Returns the instance of the comment controller
@@ -41,25 +42,25 @@ public class CommentController {
 
     /**
      * <p>
-     * Checks the comment to be created
+     * Checks the comment is created
      * </p>
      *
-     * @param comment Refers {@link Comment} to created
-     * @return True if the comment is created, false otherwise
+     * @param comment Refer {@link Comment} that comment to be created
+     * @return Returns true if the comment is created, otherwise false
      */
     public boolean create(final Comment comment) {
-        return COMMENT_DAO.create(comment);
+        return commentDAO.create(comment);
     }
 
     /**
      * <p>
-     * Checks the comment to be deleted
+     * Deletes the comment for post by with id
      * </p>
      *
-     * @param id Refers the id to delete the comment
-     * @return True if the comment is deleted, false otherwise
+     * @param id Refers the id for delete the comment
+     * @return Returns true if the comment is deleted, otherwise false
      */
     public boolean delete(final Long id) {
-        return COMMENT_DAO.delete(id);
+        return commentDAO.delete(id);
     }
 }

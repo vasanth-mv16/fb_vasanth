@@ -6,10 +6,11 @@ import com.facebook.model.Comment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * <p>
- * Provides the service for comment DAO
+ * Provides a service for comment DAO
  * </p>
  *
  * @author vasanth
@@ -32,7 +33,7 @@ public class CommentDAOImpl implements CommentDAO {
      * Gets the instance of comment service implementation
      * </p>
      *
-     * @return Returns the singleton instance of the comment service implementation class.
+     * @return Returns instance of the comment service implementation class.
      */
     public static CommentDAO getInstance() {
         if (null == commentDAOImpl) {
@@ -44,15 +45,15 @@ public class CommentDAOImpl implements CommentDAO {
 
     /**
      * <p>
-     * Creates a comment and inserts it into the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param comment Refers the like to create and insert.
-     * @return True, if the post was created and inserted successfully, otherwise false
+     * @param comment Reference {@link Comment} that comment to be created
+     * @return Returns true if the comment is created, otherwise false
      */
     @Override
     public boolean create(final Comment comment) {
-        final String sql = "insert into comment_post(user_id, post_id, message) values (?,?,?);";
+        final String sql = "insert into comment_post(userid, postid, message) values (?,?,?);";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -65,7 +66,7 @@ public class CommentDAOImpl implements CommentDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -74,11 +75,11 @@ public class CommentDAOImpl implements CommentDAO {
 
     /**
      * <p>
-     * Deletes comment with the id from the database
+     * {@inheritDoc}
      * </p>
      *
-     * @param id Refer the id of the comment to delete
-     * @return True, if the comment was deleted successfully, otherwise false
+     * @param id Refers the id for delete the comment
+     * @return Returns true if the comment is deleted, otherwise false
      */
     @Override
     public boolean delete(Long id) {
@@ -93,7 +94,7 @@ public class CommentDAOImpl implements CommentDAO {
             connection.commit();
 
             return true;
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 

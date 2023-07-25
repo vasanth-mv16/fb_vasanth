@@ -16,7 +16,7 @@ import java.time.Instant;
 
 /**
  * <p>
- *  Handles request and response for the "/post" url
+ * Handles post creation and editing requests and responses
  * </p>
  *
  * @author vasanth
@@ -29,8 +29,8 @@ public class PostServlet extends HttpServlet {
     private final PostController postController;
 
     public PostServlet() {
-        commonReader = CommonReader.getInstance();
-        postController = PostController.getInstance();
+        this.commonReader = CommonReader.getInstance();
+        this.postController = PostController.getInstance();
     }
 
     /**
@@ -38,11 +38,11 @@ public class PostServlet extends HttpServlet {
      * Handles request and response for the post creation
      * </p>
      *
-     * @param request HTTP request object containing client request information
-     * @param response HTTP response object for sending data back to the client
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the client
      * @throws IOException File that doesn't exist at specified location
      */
-    public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonData = new JSONObject(jsonString);
         final PostBuilder post = new PostBuilder();
@@ -55,45 +55,34 @@ public class PostServlet extends HttpServlet {
 
         final JSONObject jsonResponse = new JSONObject();
 
-        if (postController.create(post.bulidPost())) {
-            jsonResponse.put("message", "Post Successfully");
-        } else {
-            jsonResponse.put("message", "Post failed");
-        }
-
+        jsonResponse.put("message", postController.create(post.buildPost()) ? "Post Successfully" : "Post failed");
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
         out.print(jsonResponse);
-
     }
 
     /**
      * <p>
-     * Handles request and response for the get post
+     * Handles request and response for retrieve the post
      * </p>
      *
-     * @param request HTTP request object containing client request information
-     * @param response HTTP response object for sending data back to the client
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the client
      * @throws IOException File that doesn't exist at specified location
      */
-    public void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonData = new JSONObject(jsonString);
         final Post post = postController.get(jsonData.getLong("id"));
 
         System.out.println("UserID : " + post.getUserId());
-        System.out.println("Caption : " +post.getCaption());
-        System.out.println("Location : " +post.getLocation());
+        System.out.println("Caption : " + post.getCaption());
+        System.out.println("Location : " + post.getLocation());
         System.out.println("Upload Time : " + post.getUploadTime());
 
         final JSONObject jsonResponse = new JSONObject();
 
-        if (null != postController.get(jsonData.getLong("id"))) {
-            jsonResponse.put("message", "Get successfully");
-        } else {
-            jsonResponse.put("message", "Not found");
-        }
-
+        jsonResponse.put("message", null != postController.get(jsonData.getLong("id")) ? "Retrieve successfully" : "Not found");
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
         out.print(jsonResponse);
@@ -101,14 +90,14 @@ public class PostServlet extends HttpServlet {
 
     /**
      * <p>
-     * Handles request and response for the post updation
+     * Handles post update requests and responses
      * </p>
      *
-     * @param request HTTP request object containing client request information
-     * @param response HTTP response object for sending data back to the client
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the client
      * @throws IOException File that doesn't exist at specified location
      */
-    public void doPut(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doPut(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonData = new JSONObject(jsonString);
         final Post post = postController.get(jsonData.getLong("id"));
@@ -120,12 +109,8 @@ public class PostServlet extends HttpServlet {
 
         final JSONObject jsonResponse = new JSONObject();
 
-        if (postController.update(post, jsonData.getLong("id"))) {
-            jsonResponse.put("message", "Updated Successfully");
-        } else {
-            jsonResponse.put("message", "Updated failed");
-        }
-
+        jsonResponse.put("message", postController.update(post, jsonData.getLong("id")) ? "Updated Successfully" :
+                "Updated failed");
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
         out.print(jsonResponse);
@@ -136,21 +121,17 @@ public class PostServlet extends HttpServlet {
      * Handles request and response for the post deletion
      * </p>
      *
-     * @param request HTTP request object containing client request information
-     * @param response HTTP response object for sending data back to the client
+     * @param request  Refer HTTP request object contains client request data
+     * @param response Refer HTTP response object for sending data back to the clientq
      * @throws IOException File that doesn't exist at specified location
      */
-    public void doDelete(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doDelete(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonObject = new JSONObject(jsonString);
         final JSONObject jsonResponse = new JSONObject();
 
-        if (postController.delete(jsonObject.getLong("id"))) {
-            jsonResponse.put("message", "Post deleted successfully");
-        } else {
-            jsonResponse.put("message", "Post not found");
-        }
-
+        jsonResponse.put("message", postController.delete(jsonObject.getLong("id")) ? "Post deleted successfully" :
+                "Post not found");
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
         out.print(jsonResponse);

@@ -35,16 +35,16 @@ public class CommonReader {
             commonReader = new CommonReader();
         }
 
-        return  commonReader;
+        return commonReader;
     }
 
     /**
      * <p>
-     * Reads Json data from the request body and returns it as a string
+     * Reads json data from the request body and returns it as a string
      * </p>
      *
-     * @param request HttpServletRequest object gets the incoming request
-     * @return String contains the Json data read from the request body
+     * @param request Refers HttpServletRequest object gets the incoming request
+     * @return Returns string contains the Json data read from the request body
      * @throws IOException File that doesn't exist at specified location
      */
     public String readJsonData(final HttpServletRequest request) throws IOException {

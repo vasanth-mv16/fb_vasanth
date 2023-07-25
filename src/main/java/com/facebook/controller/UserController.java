@@ -6,7 +6,7 @@ import com.facebook.service.UserService;
 
 /**
  * <p>
- * Given controller act us for request and respond
+ * Given controller act us for request and respond for user details
  * </p>
  *
  * @author vasanth
@@ -15,7 +15,7 @@ import com.facebook.service.UserService;
 public class UserController {
 
     private static UserController userController;
-    private static final UserService USER_SERVICE_IMPL = new UserServiceImpl();
+    private final UserService userServiceImpl;
 
     /**
      * <p>
@@ -23,6 +23,7 @@ public class UserController {
      * </p>
      */
     private UserController() {
+        this.userServiceImpl = new UserServiceImpl();
     }
 
     /**
@@ -49,7 +50,7 @@ public class UserController {
      * @return True if the user is updated, false otherwise
      */
     public boolean update(final User user, final Long id) {
-        return USER_SERVICE_IMPL.update(user, id);
+        return userServiceImpl.update(user, id);
     }
 
     /**
@@ -61,19 +62,19 @@ public class UserController {
      * @return True if the user is deleted, false otherwise
      */
     public boolean delete(final Long id) {
-        return USER_SERVICE_IMPL.delete(id);
+        return userServiceImpl.delete(id);
     }
 
     /**
      * <p>
-     * Gets the user detail
+     * Retrieves the user detail
      * </p>
      *
      * @param id Represents the user through id
-     * @return Returns {@link User} details
+     * @return Returns {@link User} details for specified user
      */
     public User get(final Long id) {
-        return USER_SERVICE_IMPL.get(id);
+        return userServiceImpl.get(id);
     }
 
 }

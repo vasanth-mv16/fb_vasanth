@@ -1,12 +1,13 @@
 package com.facebook.DAO;
 
 import com.facebook.model.Like;
+import com.facebook.model.User;
 
 import java.util.Collection;
 
 /**
  * <p>
- * Provides the service for the like DAO
+ * Provides a service for the like DAO
  * </p>
  *
  * @author vasanth
@@ -19,28 +20,28 @@ public interface LikeDAO {
      * Checks the like is created
      * </p>
      *
-     * @param like Refer {@link Like} to create
-     * @return True if the like is created, otherwise false
+     * @param like Refer {@link Like} that like to be created
+     * @return Returns true if the like is created, otherwise false
      */
     boolean create(final Like like);
 
     /**
      * <p>
-     * Gets the like list details
+     * Retrieves the like collection of the user
      * </p>
      *
-     * @param userId Refers the userId to get like
-     * @return Collection of likes
+     * @param postId Refers the post id to retrieves like details
+     * @return Returns collection of likes for the user
      */
-    Collection<Like> get(final Long userId);
+    Collection<User> get(final Long postId);
 
     /**
      * <p>
-     * Gets the like count for the user
+     * Retrieves the like count for the post
      * </p>
      *
-     * @param postId Represents the user id to get the like count
-     * @return Gets the like count of the user
+     * @param postId Represents the post id to get the like count
+     * @return Returns the like count for the specified post
      */
     Long getCount(final Long postId);
 
@@ -50,7 +51,7 @@ public interface LikeDAO {
      * </p>
      *
      * @param likeId Refers the id for unlike the post
-     * @return True if the like is unliked, otherwise false
+     * @return Returns true if the like is unliked, otherwise false
      */
     boolean delete(final Long likeId);
 }

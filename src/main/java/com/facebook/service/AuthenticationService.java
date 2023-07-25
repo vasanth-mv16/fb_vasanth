@@ -14,13 +14,13 @@ public interface AuthenticationService {
 
     /**
      * <p>
-     * Adds user details.
+     * Adds user details
      * </p>
      *
      * @param user Refers {@link User} to add
      * @return True if the user is successfully added, false otherwise
      */
-    boolean signUp(final User user);
+    boolean registerUser(final User user);
 
     /**
      * <p>
@@ -30,7 +30,7 @@ public interface AuthenticationService {
      * @param user Refer {@link User} to sign in
      * @return True if the sign-in is successful, false otherwise
      */
-    boolean signIn(final User user);
+    boolean authenticateUser(final User user);
 
     /**
      * <p>

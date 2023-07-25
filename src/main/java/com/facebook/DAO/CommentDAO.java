@@ -4,7 +4,7 @@ import com.facebook.model.Comment;
 
 /**
  * <p>
- * Provides the service for the comment DAO
+ * Provides a service for the comment DAO
  * </p>
  *
  * @author vasanth
@@ -17,8 +17,8 @@ public interface CommentDAO {
      * Checks the comment is created
      * </p>
      *
-     * @param comment Refer {@link Comment} to create
-     * @return boolean - True if the comment is created, otherwise false
+     * @param comment Reference {@link Comment} that comment to be created
+     * @return Returns true if the comment is created, otherwise false
      */
     boolean create(final Comment comment);
 
@@ -28,7 +28,7 @@ public interface CommentDAO {
      * </p>
      *
      * @param id Refers the id for delete the comment
-     * @return True if the comment is deleted, otherwise false
+     * @return Returns true if the comment is deleted, otherwise false
      */
     boolean delete(final Long id);
 }

@@ -38,7 +38,7 @@ public class PostBuilder {
         post.setUploadTime(uploadTime);
     }
 
-    public Post bulidPost() {
+    public Post buildPost() {
         return this.post;
     }
 }

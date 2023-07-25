@@ -1,14 +1,16 @@
 package com.facebook.DAOConnection;
 
+import com.facebook.customException.DataBaseAccessException;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
  * <p>
- *  Provides a database connection using the postgreSQL driver
+ * Provides a database connection using the postgreSQL driver
  * </p>
  *
  * @author vasanth
@@ -45,17 +47,15 @@ public class DataSourceConnection {
      * Retrieves a connection using the postgreSQL driver
      * </p>
      *
-     * @return Returns connection object
+     * @return Returns datasource connection object
      */
     public static DataSource getDataSource() {
         try {
-            final String filePath = "C:\\Users\\maria\\IdeaProjects\\maven_project\\facebook\\src\\test\\resources\\db.properties";
-            final FileInputStream fileInputStream = new FileInputStream(filePath);
+            final InputStream inputStream = DataSourceConnection.class.getClassLoader().getResourceAsStream("db.properties");
             final BasicDataSource dataSource = new BasicDataSource();
             final Properties properties = new Properties();
 
-            properties.load(fileInputStream);
-
+            properties.load(inputStream);
             dataSource.setDriverClassName(properties.getProperty("DRIVER"));
             dataSource.setUrl(properties.getProperty("SQL_URL"));
             dataSource.setUsername(properties.getProperty("USER_NAME"));
@@ -64,10 +64,8 @@ public class DataSourceConnection {
             dataSource.setMaxIdle(100);
 
             return dataSource;
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (IOException exception) {
+            throw new DataBaseAccessException("Problem in Database connection, check it out");
         }
-
-        return null;
     }
 }

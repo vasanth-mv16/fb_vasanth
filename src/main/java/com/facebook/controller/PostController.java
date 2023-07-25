@@ -8,7 +8,7 @@ import java.util.Collection;
 
 /**
  * <p>
- * Given controller acts as request and respond
+ * Given controller acts as request and respond for post
  * </p>
  *
  * @author vasanth
@@ -17,7 +17,7 @@ import java.util.Collection;
 public class PostController {
 
     private static PostController postController;
-    private static final PostService POST_SERVICE_IMPL = new PostServiceImpl();
+    private final PostService postServiceImpl;
 
     /**
      * <p>
@@ -25,6 +25,7 @@ public class PostController {
      * </p>
      */
     private PostController() {
+        this.postServiceImpl = new PostServiceImpl();
     }
 
     /**
@@ -44,61 +45,62 @@ public class PostController {
 
     /**
      * <p>
-     * Checks the post to be created
+     * Checks if the post details are created, and adds the post
      * </p>
      *
-     * @param post Refer {@link Post} to create
-     * @return True if the post is created, false otherwise
+     * @param post Reference {@link Post} that post to be added
+     * @return Returns true if the post is successfully added, false otherwise
      */
     public boolean create(final Post post) {
-        return POST_SERVICE_IMPL.create(post);
+        return postServiceImpl.create(post);
     }
 
     /**
      * <p>
-     * Gets the post details
+     * Retrieves the collection of post for the user
      * </p>
      *
-     * @return Collection of post of the user
+     * @param userId Refers the user id to retrieve all the post
+     * @return Returns the collection of posts for the specified user
      */
     public Collection<Post> getALl(final Long userId) {
-        return POST_SERVICE_IMPL.getAll(userId);
+        return postServiceImpl.getAll(userId);
     }
 
     /**
      * <p>
-     * Gets the post detail using id
+     * Retrieves the post details using the post id
      * </p>
      *
-     * @param id Represents the id of the post
-     * @return Returns {@link Post} of the user by id
+     * @param id Represents the id of the post to retrieved
+     * @return Returns {@link Post} details of the user
      */
     public Post get(final Long id) {
-        return POST_SERVICE_IMPL.get(id);
+        return postServiceImpl.get(id);
     }
 
     /**
      * <p>
-     * Checks the post is updated
+     * Checks if the post details are updated
      * </p>
      *
-     * @param post Refers {@link Post} to update
-     * @param id
-     * @return True if the post is updated, false otherwise
+     * @param post Reference {@link Post} that post to be updated
+     * @param id Refers the id to update the post details
+     * @return Returns true if the post is successfully updated, false otherwise
      */
     public boolean update(final Post post, final Long id) {
-        return POST_SERVICE_IMPL.update(post, id);
+        return postServiceImpl.update(post, id);
     }
 
     /**
      * <p>
-     * Checks the post is deleted
+     * Deletes the post details by using id
      * </p>
      *
-     * @param id Refers the id to delete the post
-     * @return True if the post is deleted, false otherwise
+     * @param id Refers the id for delete the post
+     * @return Return true if the post is successfully updated, false otherwise
      */
     public boolean delete(final Long id) {
-        return POST_SERVICE_IMPL.delete(id);
+        return postServiceImpl.delete(id);
     }
 }

@@ -1,7 +1,7 @@
 package com.facebook.service.Impl2;
 
-import com.facebook.DAO.AuthenticationDAO;
-import com.facebook.DAO.Impl.AuthenticationDAOImpl;
+import com.facebook.DAO.UserAuthenticationDAO;
+import com.facebook.DAO.Impl.UserAuthenticationDAOImpl;
 import com.facebook.model.User;
 import com.facebook.service.AuthenticationService;
 
@@ -15,7 +15,11 @@ import com.facebook.service.AuthenticationService;
  */
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final AuthenticationDAO AUTHENTICATION_DAO_IMPL =AuthenticationDAOImpl.getInstance();
+    private final UserAuthenticationDAO userAuthenticationDAOImpl;
+
+    public AuthenticationServiceImpl() {
+        this.userAuthenticationDAOImpl = UserAuthenticationDAOImpl.getInstance();
+    }
 
     /**
      * <p>
@@ -25,8 +29,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param user Refers the user containing the information to be used for sign up
      * @return true if the user is successfully registered, false otherwise
      */
-    public boolean signUp(final User user) {
-        return AUTHENTICATION_DAO_IMPL.signUp(user);
+    public boolean registerUser(final User user) {
+        return userAuthenticationDAOImpl.registerUser(user);
     }
 
     /**
@@ -37,8 +41,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @param user Refers the user containing the need for authentication
      * @return true, if the user is successfully authenticated, false otherwise
      */
-    public boolean signIn(final User user) {
-        return AUTHENTICATION_DAO_IMPL.signIn(user);
+    public boolean authenticateUser(final User user) {
+        return userAuthenticationDAOImpl.authenticateUser(user);
     }
 
     /**
@@ -50,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @return Returns user id if found, or null if not found or an error occurs
      */
     public Long getUserId(final User user) {
-        return AUTHENTICATION_DAO_IMPL.getUserId(user);
+        return userAuthenticationDAOImpl.getUserId(user);
     }
 
 }

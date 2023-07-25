@@ -1,6 +1,7 @@
 package com.facebook.controller;
 
 import com.facebook.model.Like;
+import com.facebook.model.User;
 import com.facebook.service.Impl2.LikeServiceImpl;
 import com.facebook.service.LikeService;
 
@@ -8,7 +9,7 @@ import java.util.Collection;
 
 /**
  * <p>
- * Given controller acts as request and respond
+ * Given controller acts as request and respond for like
  * </p>
  *
  * @author vasanth
@@ -17,7 +18,7 @@ import java.util.Collection;
 public class LikeController {
 
     private static LikeController likeController;
-    private static final LikeService LIKE_DAO_IMPL = new LikeServiceImpl();
+    private final LikeService likeDAOImpl;
 
     /**
      * <p>
@@ -25,6 +26,7 @@ public class LikeController {
      * </p>
      */
     private LikeController() {
+        this.likeDAOImpl = new LikeServiceImpl();
     }
 
     /**
@@ -44,48 +46,49 @@ public class LikeController {
 
     /**
      * <p>
-     * Checks the like to be created
+     * Checks the like is created
      * </p>
      *
-     * @param like Refers {@link Like} to created
-     * @return True if the like is created, false otherwise
+     * @param like Reference {@link Like} that like to be created
+     * @return True if the like is created, otherwise false
      */
     public boolean create(final Like like) {
-        return LIKE_DAO_IMPL.create(like);
+        return likeDAOImpl.create(like);
     }
 
     /**
      * <p>
-     * Gets the like details
+     * Retrieves the like collection of the user
      * </p>
      *
-     * @return Collection of like of the post
+     * @param postId Refers the post id to retrieves like details
+     * @return Returns collection of user
      */
-    public Collection<Like> get(final Long userId) {
-        return LIKE_DAO_IMPL.get(userId);
+    public Collection<User> get(final Long postId) {
+        return likeDAOImpl.get(postId);
     }
 
     /**
      * <p>
-     * Gets the like count details
+     * Retrieves the like count for the post
      * </p>
      *
-     * @param postId Represents the user id has to get the post
-     * @return returns the like count of the post
+     * @param postId Represents the post id to get the like count
+     * @return Returns the like count of the post
      */
     public Long getCount(final Long postId) {
-        return LIKE_DAO_IMPL.getCount(postId);
+        return likeDAOImpl.getCount(postId);
     }
 
     /**
      * <p>
-     * Checks the like to be deleted
+     * Deletes the like for the post with the id
      * </p>
      *
-     * @param likeId Refers the id to unlike the post
-     * @return True if the like is deleted, false otherwise
+     * @param likeId Refers the id for unlike the post
+     * @return Returns true if the like is unliked, otherwise false
      */
     public boolean delete(final Long likeId) {
-        return LIKE_DAO_IMPL.delete(likeId);
+        return likeDAOImpl.delete(likeId);
     }
 }

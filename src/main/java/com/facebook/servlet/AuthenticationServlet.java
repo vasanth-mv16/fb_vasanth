@@ -1,7 +1,7 @@
 package com.facebook.servlet;
 
-import com.facebook.controller.UserController;
-import com.facebook.model.User;
+import com.facebook.controller.AuthenticationController;
+import com.facebook.model.UserBuilder;
 import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
@@ -13,26 +13,26 @@ import java.io.PrintWriter;
 
 /**
  * <p>
- * Handles request and response for the user edit details
+ * Handles request and response for the user register and login
  * </p>
  *
  * @author vasanth
  * @version 1.1
  */
-@WebServlet("/user")
-public class UserServlet extends HttpServlet {
+@WebServlet("/RegisterOrLogin")
+public class AuthenticationServlet extends HttpServlet {
 
     private final CommonReader commonReader;
-    private final UserController userController;
+    private final AuthenticationController authenticationController;
 
-    public UserServlet() {
+    public AuthenticationServlet() {
         this.commonReader = CommonReader.getInstance();
-        this.userController = UserController.getInstance();
+        this.authenticationController = AuthenticationController.getInstance();
     }
 
     /**
      * <p>
-     * Handles user update requests and responses
+     * Handles request and response for the user Registration
      * </p>
      *
      * @param request  Refer HTTP request object contains client request data
@@ -40,10 +40,10 @@ public class UserServlet extends HttpServlet {
      * @throws IOException File that doesn't exist at specified location
      */
     @Override
-    protected void doPut(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
         final JSONObject jsonObject = new JSONObject(jsonString);
-        final User user = userController.get(jsonObject.getLong("id"));
+        final UserBuilder user = new UserBuilder();
 
         user.setName(jsonObject.getString("name"));
         user.setEmail(jsonObject.getString("email"));
@@ -53,8 +53,7 @@ public class UserServlet extends HttpServlet {
 
         final JSONObject jsonResponse = new JSONObject();
 
-        jsonResponse.put("message", userController.update(user, jsonObject.getLong("id")) ? "User details updated" +
-                " successfully" : "User not found or no changes made");
+        jsonResponse.put("message", authenticationController.registerUser(user.build()) ? "Sign Up Successfully" : "Sign Up failed");
 
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();
@@ -63,21 +62,25 @@ public class UserServlet extends HttpServlet {
 
     /**
      * <p>
-     * Handles request and response for the user deletion
+     * Handles request and response for the user authentication
      * </p>
      *
      * @param request  Refer HTTP request object contains client request data
      * @param response Refer HTTP response object for sending data back to the client
      * @throws IOException File that doesn't exist at specified location
      */
-    @Override
-    protected void doDelete(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String jsonString = commonReader.readJsonData(request);
-        final JSONObject jsonObject = new JSONObject(jsonString);
+        final JSONObject jsonData = new JSONObject(jsonString);
+        final UserBuilder user = new UserBuilder();
+
+        user.setEmail(jsonData.getString("email"));
+        user.setMobileNumber(jsonData.getString("mobileNumber"));
+        user.setPassword(jsonData.getString("password"));
+
         final JSONObject jsonResponse = new JSONObject();
 
-        jsonResponse.put("message", userController.delete(jsonObject.getLong("id")) ? "User deleted successfully" :
-                "User not found");
+        jsonResponse.put("Message", authenticationController.authenticateUser(user.build()) ? "Sign in successfully" : "Sign in failed");
 
         response.setContentType("application/json");
         final PrintWriter out = response.getWriter();

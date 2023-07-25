@@ -1,6 +1,6 @@
 package com.facebook.DAO.Impl;
 
-import com.facebook.DAO.AuthenticationDAO;
+import com.facebook.DAO.UserAuthenticationDAO;
 import com.facebook.DAOConnection.DataSourceConnection;
 import com.facebook.customException.DataBaseAccessException;
 import com.facebook.model.User;
@@ -8,25 +8,26 @@ import com.facebook.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * <p>
- * Provides the service for Authentication DAO
+ * Provides a service for authentication DAO
  * </p>
  *
  * @author vasanth
  * @version 1.1
  */
-public class AuthenticationDAOImpl implements AuthenticationDAO {
+public class UserAuthenticationDAOImpl implements UserAuthenticationDAO {
 
-    private static AuthenticationDAOImpl authenticationDAOImpl;
+    private static UserAuthenticationDAOImpl authenticationDAOImpl;
 
     /**
      * <p>
      * Enables the creation of only one object at a time
      * </p>
      */
-    private AuthenticationDAOImpl() {
+    private UserAuthenticationDAOImpl() {
     }
 
     /**
@@ -36,9 +37,9 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
      *
      * @return Returns the instance of the authentication DAO
      */
-    public static AuthenticationDAOImpl getInstance() {
+    public static UserAuthenticationDAOImpl getInstance() {
         if(null == authenticationDAOImpl) {
-            authenticationDAOImpl = new AuthenticationDAOImpl();
+            authenticationDAOImpl = new UserAuthenticationDAOImpl();
         }
 
         return authenticationDAOImpl;
@@ -46,13 +47,13 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     /**
      * <p>
-     * Signs up a new user by inserting their details into the user table
+     * {@inheritDoc}
      * </p>
      *
      * @param user Represents the user details for getting information
      * @return true if the sign-up was successful, false otherwise.
      */
-    public boolean signUp(final User user)  {
+    public boolean registerUser(final User user)  {
         final String sql = "insert into sign(name, mobilenumber, email, password, dateofbirth ) values(?, ?, ?, ?, ?)";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
@@ -77,14 +78,14 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     /**
      * <p>
-     * Signs in a user by checking email or mobile number
+     * {@inheritDoc}
      * </p>
      *
-     * @param user Refers {@link User}user to sign in
-     * @return true if the user is successfully signed in, otherwise false
+     * @param user Refers {@link User}user to authenticated
+     * @return Returns true if the user is successfully authenticated, otherwise false
      */
     @Override
-    public boolean signIn(final User user) {
+    public boolean authenticateUser(final User user) {
         return (null != user.getEmail() ? isUserEmailExists(user) : isUserMobileNumberExists(user));
     }
 
@@ -93,11 +94,11 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
      * Checks the users mobile number and password exists in the database
      * </p>
      *
-     * @param user {@link User}user object containing the mobile number and password.
-     * @return true if a user with the given mobile number and password is found, otherwise false
+     * @param user Refers {@link User} that user object contains the mobile number and password
+     * @return Returns true if a user with the given mobile number and password is found, otherwise false
      */
     public boolean isUserMobileNumberExists(final User user) {
-        final String sql = "select * from users where phonenumber = ? and password = ?;";
+        final String sql = "select id,name,mobilenumber,email,password,dateofbirth from sign where phonenumber = ? and password = ?;";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -110,7 +111,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             connection.commit();
 
             return resultSet.next();
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -122,11 +123,11 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
      * Checks the users email and password exists in the database
      * </p>
      *
-     * @param user {@link User}user object containing the mobile number and password.
-     * @return true if a user with the given mobile number and password is found, otherwise false
+     * @param user Refers {@link User}user object contains the mobile number and password
+     * @return Returns true if a user with the given mobile number and password is found, otherwise false
      */
     public boolean isUserEmailExists(final User user) {
-        final String sql = "select * from sign where email = ? and password = ?";
+        final String sql = "select id,name,mobilenumber,email,password,dateofbirth from sign where email = ? and password = ?";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -139,7 +140,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             connection.commit();
 
             return resultSet.next();
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
@@ -148,15 +149,15 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     /**
      * <p>
-     * Retrieves the id of the user based on mobile number and email
+     * {@inheritDoc}
      * </p>
      *
-     * @param user {@link User}user object containing the mobile number and email address
+     * @param user Refers {@link User}that user to retrieve the id
      * @return Returns the id of the user if found, otherwise null
      */
     @Override
     public Long getUserId(final User user) {
-        final String sql = "select id from users where phonenumber = ? or email = ?";
+        final String sql = "select id from sign where phonenumber = ? or email = ?";
 
         try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -171,7 +172,7 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
             if (resultSet.next()) {
                 return resultSet.getLong("id");
             }
-        } catch (Exception exception) {
+        } catch (SQLException exception) {
             throw new DataBaseAccessException("Problem in connection, check it out");
         }
 

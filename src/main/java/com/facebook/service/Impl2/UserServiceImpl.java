@@ -7,7 +7,7 @@ import com.facebook.service.UserService;
 
 /**
  * <p>
- * Implements the following services for the user
+ * Provides methods to update, delete, and retrieve user details
  * </p>
  *
  * @author vasanth
@@ -19,11 +19,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     * Updates user details
+     * {@inheritDoc}
      * </p>
      *
-     * @param user Refers {@link User} to update
-     * @return True if the user details are updated, false otherwise
+     * @param user Reference {@link User} that user to be updated
+     * @return Returns true if the user details are updated, false otherwise
      */
     @Override
     public boolean update(final User user, final Long id) {
@@ -32,11 +32,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     * Deletes user details.
+     * {@inheritDoc}
      * </p>
      *
      * @param id Represents the id of the user to be deleted
-     * @return True if the user details are successfully deleted, false otherwise
+     * @return Returns true if the user details are successfully deleted, false otherwise
      */
     @Override
     public boolean delete(final Long id) {
@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * <p>
-     * Retrieves a user by id
+     * {@inheritDoc}
      * </p>
      *
      * @param id Represents the id of the user to retrieve
-     * @return Returns {@link User} details
+     * @return Returns {@link User} details by the id
      */
     @Override
     public User get(final Long id) {
