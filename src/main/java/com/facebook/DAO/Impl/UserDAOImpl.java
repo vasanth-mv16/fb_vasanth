@@ -2,7 +2,6 @@ package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.UserDAO;
 import com.facebook.DAOConnection.DataSourceConnection;
-import com.facebook.DAOConnection.DatabaseAccessConnection;
 import com.facebook.model.User;
 
 import java.sql.Connection;

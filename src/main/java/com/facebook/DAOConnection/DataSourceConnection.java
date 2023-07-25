@@ -6,13 +6,33 @@ import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+/**
+ * <p>
+ *  Provides a database connection using the postgreSQL driver
+ * </p>
+ *
+ * @author vasanth
+ * @version 1.1
+ */
 public class DataSourceConnection {
 
     private static DataSourceConnection dataSourceConnection;
 
+    /**
+     * <p>
+     * Enables the creation of only one object at a time
+     * </p>
+     */
     private DataSourceConnection() {
     }
 
+    /**
+     * <p>
+     * Gets the instance of JDBC connection service
+     * </p>
+     *
+     * @return Returns the instance of the JDBC connection class
+     */
     public static DataSourceConnection getInstance() {
         if(null == dataSourceConnection) {
             dataSourceConnection = new DataSourceConnection();
@@ -20,6 +40,13 @@ public class DataSourceConnection {
         return dataSourceConnection;
     }
 
+    /**
+     * <p>
+     * Retrieves a connection using the postgreSQL driver
+     * </p>
+     *
+     * @return Returns connection object
+     */
     public static DataSource getDataSource() {
         try {
             final String filePath = "C:\\Users\\maria\\IdeaProjects\\maven_project\\facebook\\src\\test\\resources\\db.properties";

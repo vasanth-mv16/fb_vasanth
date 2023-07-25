@@ -2,7 +2,6 @@ package com.facebook.DAO.Impl;
 
 import com.facebook.DAO.LikeDAO;
 import com.facebook.DAOConnection.DataSourceConnection;
-import com.facebook.DAOConnection.DatabaseAccessConnection;
 import com.facebook.model.Like;
 
 import java.sql.Connection;
@@ -88,7 +87,7 @@ public class LikeDAOImpl implements LikeDAO {
         final Collection<Like> likes = new ArrayList<>();
         final String sql = "select * from like_post where user_id = ?";
 
-        try (final Connection connection = DatabaseAccessConnection.getConnection();
+        try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
@@ -123,7 +122,7 @@ public class LikeDAOImpl implements LikeDAO {
     public Long getCount(final Long postId) {
         final String sql = "select post_id, count(post_id) as post_count from like_post where post_id = ? group by post_id;";
 
-        try (final Connection connection = DatabaseAccessConnection.getConnection();
+        try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
@@ -155,7 +154,7 @@ public class LikeDAOImpl implements LikeDAO {
     public boolean delete(final Long likeId) {
         final String sql = "delete from like_post where id = ?";
 
-        try (final Connection connection = DatabaseAccessConnection.getConnection();
+        try (final Connection connection = DataSourceConnection.getDataSource().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             connection.setAutoCommit(false);
